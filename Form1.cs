@@ -1,15 +1,11 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using RandomPicLib;
+using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
 using System.Drawing;
 using System.IO;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
-using Newtonsoft.Json;
-using RandomPicLib;
 
 namespace demoAppsettings
 {
@@ -17,21 +13,14 @@ namespace demoAppsettings
     {
         private AppsettingsInfo appSettingsData;
         private string PathFolderImage;
-        public struct AppsettingsInfo
-        {
-            public string ImgFolderPath;
-            public string BackGroundColor;
-            public string LastDateTime;
-            public List<string> Topics;
-        }
-
+        /// <summary>Initializes a new instance of the <see cref="Form1" /> class.</summary>
         public Form1()
         {
             InitializeComponent();
 
             //===============================================================
             var JsonString = string.Empty;
-          
+
             try
             {
                 JsonString = System.IO.File.ReadAllText("appsettings.json");
@@ -44,7 +33,7 @@ namespace demoAppsettings
             }
 
             var ImgFolderPathFromAppsettings = appSettingsData.ImgFolderPath;
-            PathFolderImage = System.IO.Path.Combine(Application.StartupPath,ImgFolderPathFromAppsettings);
+            PathFolderImage = System.IO.Path.Combine(Application.StartupPath, ImgFolderPathFromAppsettings);
 
             try
             {
@@ -66,7 +55,7 @@ namespace demoAppsettings
 
         private async void button1_Click(object sender, EventArgs e)
         {
-            var topics =  appSettingsData.Topics?.Count()==0?new List<string>() { "Butterfly" }: appSettingsData.Topics;
+            var topics = appSettingsData.Topics?.Count() == 0 ? new List<string>() { "Butterfly" } : appSettingsData.Topics;
 
             Image rndImg = await FlickrPics.getRandomPic(topics);
 
@@ -83,16 +72,23 @@ namespace demoAppsettings
             try
             {
                 pictureBox1.Image.Save(fileName);
-                MessageBox.Show($"immagine salvata in:\n{fileName}","salva", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                MessageBox.Show($"immagine salvata in:\n{fileName}", "salva", MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
             catch (Exception)
             {
                 MessageBox.Show($"Errore salvataggio immagine :\n{fileName}", "salva", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
 
-          
+
 
         }
 
+        public struct AppsettingsInfo
+        {
+            public string BackGroundColor;
+            public string ImgFolderPath;
+            public string LastDateTime;
+            public List<string> Topics;
+        }
     }
 }
